@@ -1,0 +1,248 @@
+﻿<!-- The MIT License (MIT)
+    
+    Copyright © 2020 Pawel Bielecki, Bielecki Limited https://github.com/BieleckiLtd 
+    
+    Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+    and associated documentation files (the “Software”), to deal in the Software without restriction,
+    including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+    subject to the following conditions:
+    
+    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+    
+    THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+    INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+    DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+    ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. -->
+<Window x:Class="AppLauncher.SplashScreen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="clr-namespace:AppLauncher.Commands"
+        xmlns:UiElements="clr-namespace:AppLauncher.UiElements"
+        Title="{Binding ConfigurationProvider.ApplicationNameAndVersion, StringFormat='Opening - {0}', FallbackValue='Application Name and Version'}"
+        WindowStyle="None"
+        Height="{Binding ConfigurationProvider.WindowHeight, Mode=TwoWay, FallbackValue=348}"
+        Width="{Binding ConfigurationProvider.WindowWidth, Mode=TwoWay, FallbackValue=538}"
+        WindowStartupLocation="CenterScreen"
+        MouseDown="DragMove"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Deactivated="Window_Deactivated">
+    <Window.Resources>
+        <SolidColorBrush x:Key="scbBackgroundMain" Color="{Binding ConfigurationProvider.BackgroundColour, FallbackValue='#FF252525'}"/>
+        <SolidColorBrush x:Key="scbForegroundMain" Color="{Binding ConfigurationProvider.ForegroundMainColour, FallbackValue='#CCFFFFFF'}"/>
+        <SolidColorBrush x:Key="scbForegroundSecondary" Color="{Binding ConfigurationProvider.ForegroundSecondaryColour, FallbackValue='#77FFFFFF'}"/>
+        <SolidColorBrush x:Key="scbForegroundTertiary" Color="{Binding ConfigurationProvider.ForegroundTertiaryColour, FallbackValue='#44FFFFFF'}"/>
+        <SolidColorBrush x:Key="scbForegroundWashedOut" Color="{Binding ConfigurationProvider.ForegroundWashedOutColour, FallbackValue='#44FFFFFF'}"/>
+        <SolidColorBrush x:Key="scbLogo" Color="{Binding ConfigurationProvider.LogoFillColour, FallbackValue='#EEFFFFFF'}"/>
+
+        <Storyboard x:Key="stryMainGrid">
+            <DoubleAnimation Storyboard.TargetProperty="(Opacity)" From="0" To="1" Duration="0:0:1">
+                <DoubleAnimation.EasingFunction>
+                    <PowerEase Power="5" EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="strySpinLogo">
+            <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(RotateTransform.Angle)" From="0" To="720" Duration="0:0:1.5"  >
+                <DoubleAnimation.EasingFunction>
+                    <PowerEase EasingMode="EaseOut" Power="10"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+        <Style x:Key="stlLogo" TargetType="UiElements:Logo">
+            <Setter Property="Foreground" Value="{StaticResource scbLogo}"/>
+            <Setter Property="Margin" Value="22"/>
+            <Setter Property="MaxWidth" Value="{Binding ConfigurationProvider.Logo.MaxWidth, FallbackValue=30}"/>
+            <Setter Property="MaxHeight" Value="{Binding ConfigurationProvider.Logo.MaxHeight, FallbackValue=100}"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5, 0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <RotateTransform Angle="0"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="UiElements:Logo.MouseLeftButtonDown">
+                    <BeginStoryboard Storyboard="{StaticResource strySpinLogo}"/>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="stlAppName" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource scbForegroundMain}"/>
+            <Setter Property="FontSize" Value="40"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="stlSubTitle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource scbForegroundMain}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="stlCommandsButtonStack" TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
+        <Style x:Key="stlMinimizeAppBtn" TargetType="Button">
+            <Setter Property="Foreground" Value="{StaticResource scbForegroundTertiary}"/>
+            <Setter Property="Width" Value="45"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="UseLayoutRounding" Value="True"/>
+            <Setter Property="ToolTip" Value="Minimize"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <Path Data="M0,10 L10,10"
+                                  StrokeThickness="0.7"
+                                  Stroke="{TemplateBinding Foreground}"
+                                  VerticalAlignment="Center"
+                                  HorizontalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource scbForegroundWashedOut}"/>
+                    <Setter Property="Foreground" Value="{StaticResource scbForegroundMain}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="stlCloseAppBtn" TargetType="Button">
+            <Setter Property="Foreground" Value="{StaticResource scbForegroundTertiary}"/>
+            <Setter Property="Width" Value="45"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="UseLayoutRounding" Value="True"/>
+            <Setter Property="ToolTip" Value="Cancel"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <Path Data="M0,10 L10,0 M0,0 L10,10"
+                                  StrokeThickness="0.7"
+                                  Stroke="{TemplateBinding Foreground}"
+                                  VerticalAlignment="Center"
+                                  HorizontalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="Red"/>
+                    <Setter Property="Foreground" Value="{StaticResource scbForegroundMain}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="stlTryAgainBtn" TargetType="Button">
+            <Setter Property="Foreground" Value="{StaticResource scbForegroundSecondary}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="UseLayoutRounding" Value="True"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}" Padding="5,0">
+                            <TextBlock x:Name="content" Text="Try again" TextDecorations="Underline"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="{StaticResource scbForegroundMain}"/>
+                </Trigger>
+                <DataTrigger Binding="{Binding StatusNotifier.IsTryAgainVisible, FallbackValue=True}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="stlProgressBar" TargetType="UiElements:FluidProgressBar">
+            <Setter Property="Margin" Value="10,0"/>
+            <Setter Property="Foreground" Value="{StaticResource scbForegroundMain}"/>
+            <Setter Property="VerticalAlignment" Value="Bottom"/>
+            <Setter Property="Height" Value="1.5"/>
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding StatusNotifier.IsWorking}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+    </Window.Resources>
+    <Grid Margin="50">
+        <Grid.Triggers>
+            <EventTrigger RoutedEvent="Grid.Loaded">
+                <BeginStoryboard Storyboard="{StaticResource stryMainGrid}"/>
+            </EventTrigger>
+        </Grid.Triggers>
+        <Border Background="{StaticResource scbBackgroundMain}">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="50" ShadowDepth="0" Opacity="0.5"/>
+            </Border.Effect>
+        </Border>
+        <StackPanel Style="{StaticResource stlCommandsButtonStack}">
+            <Button x:Name="btnMinimizeApp"
+                    Style="{StaticResource stlMinimizeAppBtn}"
+                    Command="{x:Static c:CommandsManager.ApplicationMinimize}"/>
+            <Button x:Name="btnCloseApp"
+                    Style="{StaticResource stlCloseAppBtn}"
+                    Command="{x:Static c:CommandsManager.ApplicationClose}"/>
+        </StackPanel>
+        <UiElements:Logo Style="{StaticResource stlLogo}"/>
+
+        <Grid VerticalAlignment="Center" Margin="22,0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.Triggers>
+                <EventTrigger RoutedEvent="Grid.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ThicknessAnimation Storyboard.TargetProperty="(Margin)"
+                                                    From="-500,0,0,0"  To="0" Duration="0:0:1">
+                                <ThicknessAnimation.EasingFunction>
+                                    <PowerEase Power="5" EasingMode="EaseOut"/>
+                                </ThicknessAnimation.EasingFunction>
+                            </ThicknessAnimation>
+                            <DoubleAnimation Storyboard.TargetProperty="(Opacity)"
+                                                 From="0" To="1" Duration="0:0:1">
+                                <DoubleAnimation.EasingFunction>
+                                    <PowerEase Power="2" EasingMode="EaseIn"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Grid.Triggers>
+            <TextBlock Grid.Row="0" x:Name="appName" Text="{Binding ConfigurationProvider.ApplicationName, FallbackValue='Application Name'}" Style="{StaticResource stlAppName}"/>
+            <TextBlock Grid.Row="1" Text="{Binding ConfigurationProvider.Subtitle, FallbackValue='Subtitle'}" Style="{StaticResource stlSubTitle}"/>
+
+        </Grid>
+        <StackPanel Margin="20" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            <WrapPanel >
+                <TextBlock Text="{Binding StatusNotifier.Message, FallbackValue='Opening... '}" Foreground="{StaticResource scbForegroundSecondary}" TextWrapping="Wrap"/>
+                <Button Command="{x:Static c:CommandsManager.TryAgain}" CommandParameter="{Binding}" Style="{StaticResource stlTryAgainBtn}"/>
+            </WrapPanel>
+        </StackPanel>
+        <UiElements:FluidProgressBar Grid.Row="2" Style="{StaticResource stlProgressBar}"/>
+    </Grid>
+</Window>
