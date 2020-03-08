@@ -1,6 +1,11 @@
 # AppLauncher - runtime configurable, Office365-style application launcher (splash screen).
 
-Builds one, small, .Net Framework dependent executable file with one config.xml file.
+Installs, keeps up to date and launches application of your choice on client PC. Does not require elevated permissions (package is extracted in Users folder in `<LocalFolder>DeveloperName\ActualApplication</LocalFolder>`).
+
+- Before actual application `<ExecutableFile>ActualApplication.exe</ExecutableFile>` is launched program checks for updates in `<RemotePackage>C:\remote\ActualApplication.zip</RemotePackage>`. If new package is found, update happens before launch.
+- You can configure what happens if it's not possible to check for updates (for example when remote folder is not available, user is working offline, etc.). You can allow to run whichever version user has currently installed or display error message - `<RequireLatestVersion>true</RequireLatestVersion>`
+
+This solution builds one, small, .Net Framework 4.7 dependent executable file with config.xml file. Both files should be placed on network drive and users should be pointed to the executable file. Optionally you can add .ico of your choice and create shortcut to launcher's exe file but use your own icon.
 
 ## To get started
 - Build this solution,
@@ -19,7 +24,7 @@ You only need to change couple lines of code to achive different looks. No need 
 
 ![Screenshot](/Docs/images/screen3.png)
 
-Gives you 
+This gives you 
 
 ![Screenshot](/Docs/images/screen2.png)
 
