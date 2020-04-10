@@ -204,6 +204,12 @@ namespace AppLauncher.Utils
 
             return isLocalUpToDate;
         }
+
+        /// <summary>
+        /// Tries to backup currently installed application.
+        /// </summary>
+        /// <param name="configurationProvider"></param>
+        /// <returns> Returns tuple with success (true or false) and if success also path to backup directory </returns>
         private static (bool isSuccess, string backupDir) BackupLocalDir(IConfigurationProvider configurationProvider)
         {
             (bool, string) result = (false, null);
@@ -255,6 +261,12 @@ namespace AppLauncher.Utils
             
             return result;
         }
+        
+        /// <summary>
+        /// Use with caution! Moves all files and folders from location to location.
+        /// </summary>
+        /// <param name="from">Location from which all files and folders will be moved.</param>
+        /// <param name="to">Location to which all files and folders will be moved.</param>
         private static void MoveAll(string from, string to)
         {
             var fromDirectory = new DirectoryInfo(from);
@@ -267,6 +279,11 @@ namespace AppLauncher.Utils
                 dir.MoveTo(Path.Combine(to, dir.Name));
             }
         }
+
+        /// <summary>
+        /// Use with caution! Removes all files and folders from location.
+        /// </summary>
+        /// <param name="location">Location from which all files and folders will be deleted.</param>
         private static void EraseAll(string location)
         {
             var directory = new DirectoryInfo(location);
@@ -281,7 +298,7 @@ namespace AppLauncher.Utils
         }
 
         /// <summary>
-        /// Starts process and returns it to the caller
+        /// Starts process and returns it to the caller.
         /// </summary>
         public static Process StartProcess(IConfigurationProvider cp)
         {

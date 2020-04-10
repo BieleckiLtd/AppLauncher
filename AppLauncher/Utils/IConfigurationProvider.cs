@@ -28,6 +28,6 @@ namespace AppLauncher.Utils
         double WindowHeight { get; set; }
         double WindowWidth { get; set; }
 
-        void Save();
+        void Save(string fileName);
     }
 }
